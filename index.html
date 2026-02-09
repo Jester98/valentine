@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -6,362 +7,363 @@
 <title>Be My Valentine? 💘</title>
 
 <style>
-  body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-family: system-ui, Arial;
-    text-align:center;
-    overflow:hidden;
-    background: linear-gradient(135deg,#ff9ecf,#ffe3f1);
-  }
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family: system-ui, Arial;
+text-align:center;
+overflow:hidden;
+background: linear-gradient(135deg,#ff9ecf,#ffe3f1);
+}
 
-  /* SIDE PHOTO RAILS (NOT BEHIND CARD) */
-  #float-bg{
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    overflow: hidden;
-  }
+/* floating side images */
+#float-bg{
+position: fixed;
+inset: 0;
+z-index: 1;
+pointer-events: none;
+overflow: hidden;
+}
 
-  .float-photo{
-    position: absolute;
-    height: auto;
-    border-radius: 18px;
-    box-shadow: 0 25px 60px rgba(0,0,0,.25);
-    opacity: 0.92;
-    transform: translate(-50%, -50%);
-    animation: floaty linear infinite;
-  }
+.float-photo{
+position: absolute;
+border-radius: 18px;
+box-shadow: 0 25px 60px rgba(0,0,0,.25);
+opacity: 0.92;
+transform: translate(-50%, -50%);
+animation: floaty linear infinite;
+}
 
-  @keyframes floaty{
-    0%   { transform: translate(-50%,-50%) translateY(0px) rotate(-2deg); }
-    50%  { transform: translate(-50%,-50%) translateY(-30px) rotate(2deg); }
-    100% { transform: translate(-50%,-50%) translateY(0px) rotate(-2deg); }
-  }
+@keyframes floaty{
+0%   { transform: translate(-50%,-50%) translateY(0px) rotate(-2deg); }
+50%  { transform: translate(-50%,-50%) translateY(-30px) rotate(2deg); }
+100% { transform: translate(-50%,-50%) translateY(0px) rotate(-2deg); }
+}
 
-  /* MAIN CARD */
-  .card{
-    width:min(560px, 92vw);
-    background:white;
-    padding:34px 20px 28px;
-    border-radius:22px;
-    box-shadow:0 20px 60px rgba(0,0,0,.18);
-    position:relative;
-    z-index: 5; /* above side photos */
-  }
+/* card */
+.card{
+width:min(560px, 92vw);
+background:white;
+padding:34px 20px 28px;
+border-radius:22px;
+box-shadow:0 20px 60px rgba(0,0,0,.18);
+position:relative;
+z-index: 5;
+}
 
-  h1{ margin:0 0 16px; font-size: clamp(26px, 4vw, 38px); }
-  p{ margin:0 0 18px; opacity:.8; }
+h1{ margin:0 0 16px; font-size: clamp(26px, 4vw, 38px); }
+p{ margin:0 0 18px; opacity:.8; }
 
-  .btns{
-    display:flex;
-    gap:12px;
-    justify-content:center;
-    flex-wrap:wrap;
-    margin-top:8px;
-  }
+.btns{
+display:flex;
+gap:12px;
+justify-content:center;
+flex-wrap:wrap;
+margin-top:8px;
+}
 
-  button{
-    padding:14px 22px;
-    font-size:18px;
-    border:none;
-    border-radius:999px;
-    cursor:pointer;
-    transition: transform .2s ease;
-    user-select:none;
-  }
+button{
+padding:14px 22px;
+font-size:18px;
+border:none;
+border-radius:999px;
+cursor:pointer;
+transition: transform .2s ease;
+user-select:none;
+}
 
-  #yes{
-    background:#ff4da6;
-    color:white;
-    font-weight:700;
-    box-shadow:0 10px 30px rgba(255,77,166,.35);
-  }
+#yes{
+background:#ff4da6;
+color:white;
+font-weight:700;
+box-shadow:0 10px 30px rgba(255,77,166,.35);
+}
 
-  #no{
-    background:#eee;
-    color:#ff4da6;
-    font-weight:700;
-    border:2px solid rgba(255,77,166,.25);
-    position:relative;
-  }
+#no{
+background:#eee;
+color:#ff4da6;
+font-weight:700;
+border:2px solid rgba(255,77,166,.25);
+position:relative;
+}
 
-  /* Envelope scene */
-  .scene{ display:none; margin-top:22px; }
-  .scene.show{ display:block; }
+/* envelope */
+.scene{ display:none; margin-top:22px; }
+.scene.show{ display:block; }
 
-  .hint{
-    margin: 10px 0 0;
-    font-size: 13px;
-    opacity:.65;
-  }
+.hint{ margin: 10px 0 0; font-size: 13px; opacity:.65; }
 
-  .envelope-wrap{
-    display:grid;
-    place-items:center;
-    padding: 18px 0 4px;
-    position: relative;
-    z-index: 20; /* ✅ keeps envelope/letter above the title area */
-  }
+.envelope-wrap{
+display:grid;
+place-items:center;
+padding: 18px 0 4px;
+position: relative;
+z-index: 20;
+}
 
-  /* shift envelope left a bit */
-  .envelope{
-    width:260px;
-    height:170px;
-    position:relative;
-    margin: 10px auto 0;
-    overflow:hidden;               /* makes letter look inside */
-    transform: translateX(-18px);  /* move left */
-  }
+.envelope{
+width:260px;
+height:170px;
+position:relative;
+margin: 10px auto 0;
+overflow:hidden;
+transform: translateX(-18px);
+}
 
-  .env-back{
-    position:absolute;
-    inset:0;
-    background:#ff7ac4;
-    border-radius:14px;
-    z-index:1;
-  }
+.env-back{
+position:absolute;
+inset:0;
+background:#ff7ac4;
+border-radius:14px;
+z-index:1;
+}
 
-  /* Letter BEHIND pocket (but above the card header area) */
-  .letter{
-    position:absolute;
-    background:white;
-    width:85%;
-    left:7.5%;
-    bottom:10px;
-    height:135px;
-    border-radius:10px;
-    padding:15px;
-    box-shadow:0 8px 20px rgba(0,0,0,.15);
-    transform: translateY(88px); /* start hidden */
-    transition: transform 0.75s cubic-bezier(.2,.9,.2,1);
-    z-index:6; /* ✅ higher so it doesn't go under the top section */
-  }
+.letter{
+position:absolute;
+background:white;
+width:85%;
+left:7.5%;
+bottom:10px;
+height:135px;
+border-radius:10px;
+padding:15px;
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+transform: translateY(88px);
+transition: transform 0.75s cubic-bezier(.2,.9,.2,1);
+z-index:6;
+}
 
-  /* Pocket/front OVER letter */
-  .env-pocket{
-    position:absolute;
-    inset:0;
-    background:linear-gradient(135deg,#ff9ed1,#ff6fb8);
-    clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
-    border-radius:14px;
-    z-index:7; /* ✅ above letter */
-  }
+.env-pocket{
+position:absolute;
+inset:0;
+background:linear-gradient(135deg,#ff9ed1,#ff6fb8);
+clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
+border-radius:14px;
+z-index:7;
+}
 
-  /* Flap top layer */
-  .flap{
-    position:absolute;
-    top:-1px;
-    left:0;
-    width:0;
-    height:0;
-    border-left:130px solid transparent;
-    border-right:130px solid transparent;
-    border-top:90px solid #ff4da6;
-    transform-origin: top center;
-    transition: transform 0.6s cubic-bezier(.2,.9,.2,1);
-    z-index:8; /* ✅ above everything */
-  }
+.flap{
+position:absolute;
+top:-1px;
+left:0;
+width:0;
+height:0;
+border-left:130px solid transparent;
+border-right:130px solid transparent;
+border-top:90px solid #ff4da6;
+transform-origin: top center;
+transition: transform 0.6s cubic-bezier(.2,.9,.2,1);
+z-index:8;
+}
 
-  .open .letter{
-    transform: translateY(-35px); /* slides out */
-  }
-  .open .flap{
-    transform: rotateX(180deg);
-  }
+.open .letter{ transform: translateY(-35px); }
+.open .flap{ transform: rotateX(180deg); }
 
-  /* floating hearts */
-  .heart{
-    position:fixed;
-    top:-30px;
-    font-size: 22px;
-    animation: fall 1.6s ease-in forwards;
-    pointer-events:none;
-    z-index: 999;
-  }
-  @keyframes fall{
-    to{
-      transform: translateY(110vh) rotate(260deg);
-      opacity:0;
-    }
-  }
+.heart{
+position:fixed;
+top:-30px;
+font-size: 22px;
+animation: fall 1.6s ease-in forwards;
+pointer-events:none;
+z-index:999;
+}
+@keyframes fall{
+to{
+transform: translateY(110vh) rotate(260deg);
+opacity:0;
+}
+}
 </style>
+
 </head>
 
 <body>
-  <!-- SIDE PHOTOS -->
-  <div id="float-bg" aria-hidden="true"></div>
 
-  <main class="card">
-    <h1 id="title">Will you be my Valentine? 💘</h1>
-    <p id="subtitle">I promise snacks, good vibes, and a cute date.</p>
+<div id="float-bg"></div>
+<audio id="song" src="K.mp3" preload="auto"></audio>
 
-    <div class="btns" id="buttons">
-      <button id="yes">Yes 😳💖</button>
-      <button id="no">No 🙃</button>
-    </div>
+<main class="card">
+<h1 id="title">Jay, will you be my Valentine? 💘</h1>
+<p id="subtitle">I promise snacks, good vibes, and a cute date.</p>
 
-    <!-- Envelope + Letter -->
-    <div class="scene" id="scene">
-      <div class="envelope-wrap">
-        <div class="envelope" id="envelope">
-          <div class="env-back"></div>
-          <div class="letter" id="letter">
-            <h2 style="margin:0 0 8px; color:#ff2e8a; font-size:16px;">My Love,</h2>
-            <p id="letterText" style="margin:0; font-size:14px; line-height:1.35; opacity:.9;">
-              I just wanted you to know how much I love you. You make my days brighter, my heart calmer,
-              and my life better just by being in it. I’m so lucky to have you, and I’d choose you every time.
-            </p>
-            <div id="signature" style="margin-top:10px; font-weight:700; color:#ff2e8a;">— Yours 💘</div>
-          </div>
-          <div class="env-pocket"></div>
-          <div class="flap"></div>
-        </div>
-      </div>
-      <div class="hint">Tap the envelope 💌</div>
-    </div>
-  </main>
+<div class="btns" id="buttons">
+<button id="yes">Yes 😳💖</button>
+<button id="no">No 🙃</button>
+</div>
+
+<div class="scene" id="scene">
+<div class="envelope-wrap">
+<div class="envelope" id="envelope">
+<div class="env-back"></div>
+
+<div class="letter">
+<h2 style="margin:0 0 8px; color:#ff2e8a; font-size:16px;">My Love,</h2>
+<p style="margin:0; font-size:14px; line-height:1.35;">
+I just wanted you to know how much I love you. You make my days brighter, my heart calmer,
+and my life better just by being in it. I’m so lucky to have you, and I’d choose you every time.
+</p>
+<div style="margin-top:10px;font-weight:700;color:#ff2e8a;">— Yours 💘</div>
+</div>
+
+<div class="env-pocket"></div>
+<div class="flap"></div>
+</div>
+</div>
+<div class="hint">Tap the envelope 💌</div>
+</div>
+</main>
 
 <script>
-  // SIDE PHOTOS (ONLY LEFT/RIGHT)
-  const floatBg = document.getElementById("float-bg");
-  const images = [
-    "image_2026-02-09_120920292.png",
-    "image_2026-02-09_121001123.png",
-    "image_2026-02-09_121012678.png",
-    "image_2026-02-09_121029931.png",
-    "image_2026-02-09_121122622.png",
-    "image_2026-02-09_121210096.png",
-    "image_2026-02-09_121238543.png",
-    "image_2026-02-09_121259572.png",
-    "image_2026-02-09_121356200.png",
-    "image_2026-02-09_121407429.png",
-    "image_2026-02-09_121419407.png",
-    "image_2026-02-09_121450998.png",
-    "image_2026-02-09_121518710.png",
-    "image_2026-02-09_121532015.png",
-    "image_2026-02-09_121549082.png",
-    "image_2026-02-09_121558715.png"
-  ];
+const floatBg = document.getElementById("float-bg");
+const song = document.getElementById("song");
 
-  const COUNT_PER_SIDE = 7; // ✅ more images
+const images = [
+"image_2026-02-09_120920292.png",
+"image_2026-02-09_121001123.png",
+"image_2026-02-09_121012678.png",
+"image_2026-02-09_121029931.png",
+"image_2026-02-09_121122622.png",
+"image_2026-02-09_121210096.png",
+"image_2026-02-09_121238543.png",
+"image_2026-02-09_121259572.png",
+"image_2026-02-09_121356200.png",
+"image_2026-02-09_121407429.png",
+"image_2026-02-09_121419407.png",
+"image_2026-02-09_121450998.png",
+"image_2026-02-09_121518710.png",
+"image_2026-02-09_121532015.png",
+"image_2026-02-09_121549082.png",
+"image_2026-02-09_121558715.png"
+];
 
-  function rand(min, max){ return Math.random() * (max - min) + min; }
+const COUNT_PER_SIDE = 7;
 
-  function spawnSidePhotos(){
-    floatBg.innerHTML = "";
+function rand(min,max){ return Math.random()*(max-min)+min; }
 
-    const make = (side) => {
-      const img = document.createElement("img");
-      img.src = images[Math.floor(Math.random() * images.length)];
-      img.className = "float-photo";
+function spawnSidePhotos(){
+floatBg.innerHTML="";
+const placed=[];
+const minDist=220;
 
-      // ✅ spread wider on sides
-      const x = side === "left" ? rand(2, 28) : rand(72, 98);
-      // ✅ spread vertically more
-      const y = rand(5, 95);
+function farEnough(x,y){
+for(const p of placed){
+if(Math.hypot(x-p.x,y-p.y)<minDist) return false;
+}
+return true;
+}
 
-      img.style.left = x + "vw";
-      img.style.top  = y + "vh";
+const make=(side)=>{
+const img=document.createElement("img");
+img.src=images[Math.floor(Math.random()*images.length)];
+img.className="float-photo";
 
-      // ✅ bigger images
-      img.style.width = rand(170, 260) + "px";
+let x,y,px,py;
+for(let i=0;i<40;i++){
+x=side==="left"?rand(2,28):rand(72,98);
+y=rand(5,95);
+px=(x/100)*window.innerWidth;
+py=(y/100)*window.innerHeight;
+if(farEnough(px,py)){placed.push({x:px,y:py});break;}
+}
 
-      img.style.animationDuration = rand(9, 16) + "s";
-      img.style.animationDelay = rand(-8, 0) + "s";
-      return img;
-    };
+img.style.left=x+"vw";
+img.style.top=y+"vh";
+img.style.width=rand(190,280)+"px";
+img.style.animationDuration=rand(9,16)+"s";
+img.style.animationDelay=rand(-8,0)+"s";
+return img;
+};
 
-    for(let i=0;i<COUNT_PER_SIDE;i++) floatBg.appendChild(make("left"));
-    for(let i=0;i<COUNT_PER_SIDE;i++) floatBg.appendChild(make("right"));
-  }
+for(let i=0;i<COUNT_PER_SIDE;i++) floatBg.appendChild(make("left"));
+for(let i=0;i<COUNT_PER_SIDE;i++) floatBg.appendChild(make("right"));
+}
 
-  spawnSidePhotos();
-  window.addEventListener("resize", spawnSidePhotos);
+spawnSidePhotos();
+window.addEventListener("resize",spawnSidePhotos);
 
-  // MAIN LOGIC
-  const yes = document.getElementById("yes");
-  const no  = document.getElementById("no");
-  const scene = document.getElementById("scene");
-  const envelope = document.getElementById("envelope");
-  const buttons = document.getElementById("buttons");
-  const title = document.getElementById("title");
-  const subtitle = document.getElementById("subtitle");
+const yes=document.getElementById("yes");
+const no=document.getElementById("no");
+const scene=document.getElementById("scene");
+const envelope=document.getElementById("envelope");
+const buttons=document.getElementById("buttons");
+const title=document.getElementById("title");
+const subtitle=document.getElementById("subtitle");
 
-  let yesSize = 1;
-  let noSize = 1;
+let yesSize=1;
+let noSize=1;
 
-  document.addEventListener("mousemove", (e)=>{
-    const rect = no.getBoundingClientRect();
-    const distance = Math.hypot(
-      e.clientX - (rect.left + rect.width/2),
-      e.clientY - (rect.top + rect.height/2)
-    );
-    if(distance < 120) moveNo();
-  });
+document.addEventListener("mousemove",(e)=>{
+const rect=no.getBoundingClientRect();
+const distance=Math.hypot(
+e.clientX-(rect.left+rect.width/2),
+e.clientY-(rect.top+rect.height/2)
+);
+if(distance<120) moveNo();
+});
 
-  no.addEventListener("mouseover", moveNo);
-  no.addEventListener("click", moveNo);
+no.addEventListener("mouseover",moveNo);
+no.addEventListener("click",moveNo);
 
-  function moveNo(){
-    const card = document.querySelector(".card");
-    const cardRect = card.getBoundingClientRect();
-    const btnRect = no.getBoundingClientRect();
+function moveNo(){
+const card=document.querySelector(".card");
+const cardRect=card.getBoundingClientRect();
+const btnRect=no.getBoundingClientRect();
 
-    const minX = cardRect.left + 10;
-    const maxX = cardRect.right - btnRect.width - 10;
+const minX=cardRect.left+10;
+const maxX=cardRect.right-btnRect.width-10;
+const minY=cardRect.top+80;
+const maxY=cardRect.bottom-btnRect.height-10;
 
-    const minY = cardRect.top + 80;
-    const maxY = cardRect.bottom - btnRect.height - 10;
+const newX=Math.random()*(maxX-minX)+minX;
+const newY=Math.random()*(maxY-minY)+minY;
 
-    const newX = Math.random() * (maxX - minX) + minX;
-    const newY = Math.random() * (maxY - minY) + minY;
+no.style.position="fixed";
+no.style.left=newX+"px";
+no.style.top=newY+"px";
 
-    no.style.position = "fixed";
-    no.style.left = newX + "px";
-    no.style.top = newY + "px";
+noSize-=0.05;
+if(noSize<0.45) noSize=0.45;
+no.style.transform=`scale(${noSize})`;
 
-    noSize -= 0.05;
-    if(noSize < 0.45) noSize = 0.45;
-    no.style.transform = `scale(${noSize})`;
+yesSize+=0.10;
+yes.style.transform=`scale(${yesSize})`;
+}
 
-    yesSize += 0.10;
-    yes.style.transform = `scale(${yesSize})`;
-  }
+yes.addEventListener("click",()=>{
+buttons.style.display="none";
+title.textContent="YAY!! 💖";
+subtitle.textContent="Open your letter…";
+scene.classList.add("show");
 
-  yes.addEventListener("click", ()=>{
-    buttons.style.display = "none";
-    title.textContent = "YAY!! 💖";
-    subtitle.textContent = "Open your letter…";
-    scene.classList.add("show");
+if(song){song.volume=0.7;song.play().catch(()=>{});}
 
-    setTimeout(() => {
-      envelope.classList.add("open");
-      popHearts(28);
-    }, 500);
-  });
+setTimeout(()=>{
+envelope.classList.add("open");
+popHearts(28);
+},500);
+});
 
-  envelope.addEventListener("click", ()=>{
-    envelope.classList.toggle("open");
-    popHearts(12);
-  });
+envelope.addEventListener("click",()=>{
+envelope.classList.toggle("open");
+popHearts(12);
+});
 
-  function popHearts(n){
-    for(let i=0;i<n;i++){
-      const h = document.createElement("div");
-      h.className = "heart";
-      h.textContent = Math.random() > 0.5 ? "💖" : "💘";
-      h.style.left = (Math.random() * 100) + "vw";
-      h.style.fontSize = (18 + Math.random()*22) + "px";
-      h.style.animationDuration = (1.2 + Math.random()*1.2) + "s";
-      document.body.appendChild(h);
-      setTimeout(()=>h.remove(), 2200);
-    }
-  }
+function popHearts(n){
+for(let i=0;i<n;i++){
+const h=document.createElement("div");
+h.className="heart";
+h.textContent=Math.random()>0.5?"💖":"💘";
+h.style.left=(Math.random()*100)+"vw";
+h.style.fontSize=(18+Math.random()*22)+"px";
+h.style.animationDuration=(1.2+Math.random()*1.2)+"s";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),2200);
+}
+}
 </script>
+
 </body>
 </html>
