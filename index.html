@@ -18,7 +18,7 @@
   background:black;
 }
 
-/* PHOTO BACKGROUND SLIDESHOW */
+/* slideshow background */
 body::before{
   content:"";
   position:fixed;
@@ -29,26 +29,32 @@ body::before{
   background-size:cover;
   background-position:center;
   z-index:-2;
-  animation:bgSlide 20s infinite;
-  filter: blur(20px) brightness(0.5);
+  animation:bgSlide 60s infinite;
+  filter: blur(20px) brightness(0.45);
 }
 
+/* ALL YOUR IMAGES */
 @keyframes bgSlide{
-  0%{
-    background-image:url("image_2026-02-09_094758769.png");
-  }
-  33%{
-    background-image:url("image_2026-02-09_095155389.png");
-  }
-  66%{
-    background-image:url("image_2026-02-09_095213093.png");
-  }
-  100%{
-    background-image:url("image_2026-02-09_094758769.png");
-  }
+  0%{background-image:url("image_2026-02-09_120920292.png");}
+  6%{background-image:url("image_2026-02-09_121001123.png");}
+  12%{background-image:url("image_2026-02-09_121012678.png");}
+  18%{background-image:url("image_2026-02-09_121029931.png");}
+  24%{background-image:url("image_2026-02-09_121122622.png");}
+  30%{background-image:url("image_2026-02-09_121210096.png");}
+  36%{background-image:url("image_2026-02-09_121238543.png");}
+  42%{background-image:url("image_2026-02-09_121259572.png");}
+  48%{background-image:url("image_2026-02-09_121356200.png");}
+  54%{background-image:url("image_2026-02-09_121407429.png");}
+  60%{background-image:url("image_2026-02-09_121419407.png");}
+  66%{background-image:url("image_2026-02-09_121450998.png");}
+  72%{background-image:url("image_2026-02-09_121518710.png");}
+  78%{background-image:url("image_2026-02-09_121532015.png");}
+  84%{background-image:url("image_2026-02-09_121549082.png");}
+  90%{background-image:url("image_2026-02-09_121558715.png");}
+  100%{background-image:url("image_2026-02-09_120920292.png");}
 }
 
-/* pink overlay glow */
+/* pink glow overlay */
 body::after{
   content:"";
   position:fixed;
