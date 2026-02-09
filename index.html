@@ -79,5 +79,512 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
-    padding: 0 12px
+    padding: 0 12px;
+    background: linear-gradient(180deg, #ffc5e4, #ff9fd0);
+    border-bottom: 3px solid var(--win-border);
+  }
 
+  .winbar-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .win-title{
+    font-family: "Press Start 2P", monospace;
+    font-size: 10px;
+    letter-spacing: .5px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .hearts-row{
+    display:flex;
+    gap:6px;
+    transform: translateY(1px);
+  }
+  .hearts-row span{
+    font-size: 14px;
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,.6));
+  }
+
+  .win-controls{
+    display:flex;
+    gap:7px;
+  }
+
+  .ctrl{
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: #ffd7ee;
+    border: 2px solid var(--win-dark);
+    box-shadow:
+      inset 2px 2px 0 rgba(255,255,255,.65),
+      inset -2px -2px 0 rgba(0,0,0,.10);
+  }
+
+  .window-body{
+    padding: 26px 20px 22px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35)),
+      linear-gradient(135deg, var(--panel), var(--panel2));
+    position: relative;
+  }
+
+  .header{
+    position: relative;
+    z-index: 2;
+  }
+
+  h1{
+    margin:0 0 14px;
+    font-family: "Press Start 2P", monospace;
+    font-size: clamp(18px, 2.6vw, 26px);
+    line-height: 1.25;
+    color: var(--text);
+    text-shadow: 0 2px 0 rgba(255,255,255,.65);
+  }
+
+  p{
+    margin:0 0 16px;
+    opacity:.85;
+    color:#6d2a4b;
+    font-size: 14px;
+  }
+
+  .btns{
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:10px;
+  }
+
+  button{
+    padding:12px 22px;
+    font-family: "Press Start 2P", monospace;
+    font-size: 12px;
+    border-radius: 8px;
+    cursor:pointer;
+    user-select:none;
+    border: 2px solid var(--win-dark);
+    background: linear-gradient(180deg, var(--btn), var(--btn2));
+    color: #5a1f3c;
+    box-shadow:
+      inset 2px 2px 0 rgba(255,255,255,.7),
+      inset -2px -2px 0 rgba(0,0,0,.10),
+      0 6px 0 rgba(0,0,0,.12);
+    transition: transform .12s ease;
+  }
+
+  button:active{
+    transform: translateY(2px);
+    box-shadow:
+      inset -2px -2px 0 rgba(255,255,255,.55),
+      inset 2px 2px 0 rgba(0,0,0,.12),
+      0 2px 0 rgba(0,0,0,.10);
+  }
+
+  #yes{
+    border-color:#a53a74;
+    background: linear-gradient(180deg, #ff7dc5, #ff4da6);
+    color:white;
+    text-shadow: 0 1px 0 rgba(0,0,0,.15);
+  }
+
+  #no{
+    background: linear-gradient(180deg, #ffe5f3, #ffd1ea);
+    color:#a53a74;
+    position:relative;
+  }
+
+  /* SCENE */
+  .scene{
+    display:none;
+    margin-top:20px;
+    position: relative;
+    z-index: 10;
+  }
+  .scene.show{ display:block; }
+
+  .hint{
+    margin: 10px 0 0;
+    font-size: 12px;
+    opacity:.75;
+    font-family: "Press Start 2P", monospace;
+    color: #6d2a4b;
+  }
+
+  .envelope-wrap{
+    display:grid;
+    place-items:center;
+    padding: 14px 0 4px;
+    position: relative;
+  }
+
+  /* ✅ STATIC OPEN ENVELOPE (no flap) */
+  .envelope{
+    width:280px;
+    height:190px;
+    position:relative;
+    margin: 6px auto 0;
+    transform: translateX(-18px);
+  }
+
+  /* back panel */
+  .env-back{
+    position:absolute;
+    inset:0;
+    background: linear-gradient(180deg,#ff8bcd,#ff69b7);
+    border-radius:16px;
+    z-index:1;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,.18);
+  }
+
+  /* top "open" area shading */
+  .env-open{
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    height:52%;
+    border-top-left-radius:16px;
+    border-top-right-radius:16px;
+    background: linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0));
+    z-index:2;
+    pointer-events:none;
+  }
+
+  /* front pocket (static) */
+  .env-pocket{
+    position:absolute;
+    inset:0;
+    z-index:5;
+    pointer-events:none;
+  }
+  .pocket-bottom{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:58%;
+    background:linear-gradient(135deg,#ff9ed1,#ff6fb8);
+    border-bottom-left-radius:16px;
+    border-bottom-right-radius:16px;
+  }
+  .pocket-left{
+    position:absolute;
+    left:0;
+    bottom:0;
+    width:50%;
+    height:58%;
+    background:linear-gradient(135deg,#ff87c7,#ff5fb3);
+    clip-path: polygon(0 0, 100% 62%, 0 100%);
+    border-bottom-left-radius:16px;
+    opacity:0.95;
+  }
+  .pocket-right{
+    position:absolute;
+    right:0;
+    bottom:0;
+    width:50%;
+    height:58%;
+    background:linear-gradient(225deg,#ff87c7,#ff5fb3);
+    clip-path: polygon(0 62%, 100% 0, 100% 100%);
+    border-bottom-right-radius:16px;
+    opacity:0.95;
+  }
+  .pocket-lip{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:14px;
+    background:rgba(255,255,255,0.18);
+    border-bottom-left-radius:16px;
+    border-bottom-right-radius:16px;
+  }
+
+  /* ✅ LETTER ONLY ANIMATES */
+  .letter{
+    position:absolute;
+    background:white;
+    width:86%;
+    left:7%;
+    bottom:22px;              /* sits inside pocket */
+    height:140px;
+    border-radius:12px;
+    padding:14px;
+    box-shadow:0 10px 22px rgba(0,0,0,.16);
+    transform: translateY(82px); /* hidden inside */
+    transition: transform 0.75s cubic-bezier(.2,.9,.2,1);
+    z-index:4;                 /* under pocket (5) but above back (1) */
+    overflow:hidden;
+  }
+
+  .open .letter{
+    transform: translateY(-75px); /* pops up */
+  }
+
+  /* hearts */
+  .heart{
+    position:fixed;
+    top:-30px;
+    font-size: 22px;
+    animation: fall 1.6s ease-in forwards;
+    pointer-events:none;
+    z-index: 999;
+  }
+  @keyframes fall{
+    to{
+      transform: translateY(110vh) rotate(260deg);
+      opacity:0;
+    }
+  }
+</style>
+</head>
+
+<body>
+  <div id="float-bg" aria-hidden="true"></div>
+
+  <!-- MUSIC: upload K.mp3 next to index.html -->
+  <audio id="song" src="K.mp3" preload="auto"></audio>
+
+  <main class="card">
+    <div class="winbar">
+      <div class="winbar-left">
+        <div class="hearts-row" aria-hidden="true">
+          <span>💗</span><span>💗</span><span>💗</span><span>💗</span><span>💗</span>
+        </div>
+        <div class="win-title">VALENTINE.EXE</div>
+      </div>
+      <div class="win-controls" aria-hidden="true">
+        <div class="ctrl"></div>
+        <div class="ctrl"></div>
+        <div class="ctrl"></div>
+      </div>
+    </div>
+
+    <div class="window-body">
+      <div class="header">
+        <h1 id="title">Jay, will you be my Valentine? 💘</h1>
+        <p id="subtitle"></p>
+
+        <div class="btns" id="buttons">
+          <button id="yes">YES 😳💖</button>
+          <button id="no">NO 🙃</button>
+        </div>
+      </div>
+
+      <div class="scene" id="scene">
+        <div class="envelope-wrap">
+          <!-- ✅ CLICK THIS STATIC ENVELOPE -->
+          <div class="envelope" id="envelope" role="button" aria-label="Open envelope">
+            <div class="env-back"></div>
+            <div class="env-open"></div>
+
+            <div class="letter" id="letter">
+              <h2 style="margin:0 0 8px; color:#ff2e8a; font-size:14px; font-family:'Press Start 2P', monospace;">
+                My Love,
+              </h2>
+              <p id="letterText" style="margin:0; font-size:12px; line-height:1.45; opacity:.9; color:#4a1731;">
+                I just wanted you to know how much I love you. You make my days brighter, my heart calmer,
+                and my life better just by being in it. I’m so lucky to have you, and I’d choose you every time.
+              </p>
+              <div id="signature" style="margin-top:10px; font-weight:700; color:#ff2e8a; font-family:'Press Start 2P', monospace; font-size:12px;">
+                — Yours 💘
+              </div>
+            </div>
+
+            <div class="env-pocket">
+              <div class="pocket-bottom"></div>
+              <div class="pocket-left"></div>
+              <div class="pocket-right"></div>
+              <div class="pocket-lip"></div>
+            </div>
+          </div>
+        </div>
+        <div class="hint">TAP THE ENVELOPE 💌</div>
+      </div>
+    </div>
+  </main>
+
+<script>
+  // SIDE PHOTOS (ONLY LEFT/RIGHT) + LESS OVERLAP
+  const floatBg = document.getElementById("float-bg");
+  const images = [
+    "image_2026-02-09_120920292.png",
+    "image_2026-02-09_121001123.png",
+    "image_2026-02-09_121012678.png",
+    "image_2026-02-09_121029931.png",
+    "image_2026-02-09_121122622.png",
+    "image_2026-02-09_121210096.png",
+    "image_2026-02-09_121238543.png",
+    "image_2026-02-09_121259572.png",
+    "image_2026-02-09_121356200.png",
+    "image_2026-02-09_121407429.png",
+    "image_2026-02-09_121419407.png",
+    "image_2026-02-09_121450998.png",
+    "image_2026-02-09_121518710.png",
+    "image_2026-02-09_121532015.png",
+    "image_2026-02-09_121549082.png",
+    "image_2026-02-09_121558715.png"
+  ];
+
+  const COUNT_PER_SIDE = 7;
+  function rand(min, max){ return Math.random() * (max - min) + min; }
+
+  function spawnSidePhotos(){
+    floatBg.innerHTML = "";
+
+    const placed = [];
+    const minDist = 200;
+    const triesPerImg = 50;
+
+    function farEnough(px, py){
+      for (const p of placed){
+        if (Math.hypot(px - p.x, py - p.y) < minDist) return false;
+      }
+      return true;
+    }
+
+    const make = (side) => {
+      const img = document.createElement("img");
+      img.src = images[Math.floor(Math.random() * images.length)];
+      img.className = "float-photo";
+
+      const xMin = side === "left" ? 2 : 72;
+      const xMax = side === "left" ? 28 : 98;
+
+      img.style.width = rand(170, 260) + "px";
+
+      let x, y, ok = false;
+      for (let t=0; t<triesPerImg; t++){
+        x = rand(xMin, xMax);
+        y = rand(5, 95);
+
+        const px = (x/100) * window.innerWidth;
+        const py = (y/100) * window.innerHeight;
+
+        if (farEnough(px, py)){
+          placed.push({x:px, y:py});
+          ok = true;
+          break;
+        }
+      }
+
+      if (!ok){
+        x = rand(xMin, xMax);
+        y = rand(5, 95);
+      }
+
+      img.style.left = x + "vw";
+      img.style.top  = y + "vh";
+      img.style.animationDuration = rand(9, 16) + "s";
+      img.style.animationDelay = rand(-8, 0) + "s";
+      return img;
+    };
+
+    for(let i=0;i<COUNT_PER_SIDE;i++) floatBg.appendChild(make("left"));
+    for(let i=0;i<COUNT_PER_SIDE;i++) floatBg.appendChild(make("right"));
+  }
+
+  spawnSidePhotos();
+  window.addEventListener("resize", spawnSidePhotos);
+
+  // MAIN LOGIC
+  const yes = document.getElementById("yes");
+  const no  = document.getElementById("no");
+  const scene = document.getElementById("scene");
+  const envelope = document.getElementById("envelope");
+  const buttons = document.getElementById("buttons");
+  const title = document.getElementById("title");
+  const subtitle = document.getElementById("subtitle");
+  const song = document.getElementById("song");
+
+  let yesSize = 1;
+  let noSize = 1;
+  let heartRain = null;
+
+  document.addEventListener("mousemove", (e)=>{
+    const rect = no.getBoundingClientRect();
+    const distance = Math.hypot(
+      e.clientX - (rect.left + rect.width/2),
+      e.clientY - (rect.top + rect.height/2)
+    );
+    if(distance < 120) moveNo();
+  });
+
+  no.addEventListener("mouseover", moveNo);
+  no.addEventListener("click", moveNo);
+
+  function moveNo(){
+    const card = document.querySelector(".card");
+    const cardRect = card.getBoundingClientRect();
+    const btnRect = no.getBoundingClientRect();
+
+    const minX = cardRect.left + 10;
+    const maxX = cardRect.right - btnRect.width - 10;
+
+    const minY = cardRect.top + 80;
+    const maxY = cardRect.bottom - btnRect.height - 10;
+
+    const newX = Math.random() * (maxX - minX) + minX;
+    const newY = Math.random() * (maxY - minY) + minY;
+
+    no.style.position = "fixed";
+    no.style.left = newX + "px";
+    no.style.top = newY + "px";
+
+    noSize -= 0.05;
+    if(noSize < 0.45) noSize = 0.45;
+    no.style.transform = `scale(${noSize})`;
+
+    yesSize += 0.10;
+    yes.style.transform = `scale(${yesSize})`;
+  }
+
+  yes.addEventListener("click", ()=>{
+    buttons.style.display = "none";
+    title.textContent = "YAY!! 💖";
+    subtitle.textContent = "Open your letter…";
+    scene.classList.add("show");
+
+    if (song){
+      song.volume = 0.7;
+      song.play().catch(()=>{});
+    }
+
+    if (!heartRain){
+      heartRain = setInterval(() => popHearts(2), 300);
+    }
+
+    // auto-pop the letter a moment after YES
+    setTimeout(() => {
+      envelope.classList.add("open");
+      popHearts(28);
+    }, 500);
+  });
+
+  // tap envelope to pop letter in/out
+  envelope.addEventListener("click", ()=>{
+    envelope.classList.toggle("open");
+    popHearts(12);
+  });
+
+  function popHearts(n){
+    for(let i=0;i<n;i++){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = Math.random() > 0.5 ? "💖" : "💘";
+      h.style.left = (Math.random() * 100) + "vw";
+      h.style.fontSize = (18 + Math.random()*22) + "px";
+      h.style.animationDuration = (1.2 + Math.random()*1.2) + "s";
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), 2400);
+    }
+  }
+</script>
+</body>
+</html>
