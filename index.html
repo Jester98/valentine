@@ -216,6 +216,42 @@
     color: #6d2a4b;
   }
 
+  /* ✅ LOADING UI */
+  .loader{
+    display:none;
+    margin: 14px auto 0;
+    width: min(420px, 90%);
+    border: 2px solid var(--win-dark);
+    background: rgba(255,255,255,.65);
+    border-radius: 10px;
+    padding: 10px 12px 12px;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,.65),
+                inset -2px -2px 0 rgba(0,0,0,.10);
+  }
+  .loader.show{ display:block; }
+
+  .load-label{
+    font-family:"Press Start 2P", monospace;
+    font-size: 11px;
+    color:#6d2a4b;
+    margin: 0 0 10px;
+    letter-spacing: .4px;
+  }
+  .bar{
+    height: 14px;
+    border: 2px solid var(--win-dark);
+    border-radius: 8px;
+    background: rgba(255,255,255,.55);
+    overflow:hidden;
+  }
+  .bar-fill{
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(180deg, #ff7dc5, #ff4da6);
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,.45);
+    transition: width 120ms linear;
+  }
+
   .envelope-wrap{
     display:grid;
     place-items:center;
@@ -232,7 +268,6 @@
     transform: translateX(-18px);
   }
 
-  /* back panel */
   .env-back{
     position:absolute;
     inset:0;
@@ -242,7 +277,6 @@
     box-shadow: inset 0 0 0 2px rgba(255,255,255,.18);
   }
 
-  /* top "open" area shading */
   .env-open{
     position:absolute;
     left:0;
@@ -256,7 +290,6 @@
     pointer-events:none;
   }
 
-  /* front pocket (static) */
   .env-pocket{
     position:absolute;
     inset:0;
@@ -306,26 +339,35 @@
     border-bottom-right-radius:16px;
   }
 
-  /* ✅ LETTER ONLY ANIMATES */
+  /* ✅ LETTER (typewriter will fill #letterText) */
   .letter{
     position:absolute;
     background:white;
     width:86%;
     left:2.5%;
-    bottom:90px;              /* sits inside pocket */
+    bottom:90px;
     height:140px;
     border-radius:12px;
     padding:14px;
     box-shadow:0 10px 22px rgba(0,0,0,.16);
-    transform: translateY(82px); /* hidden inside */
+    transform: translateY(82px);
     transition: transform 0.75s cubic-bezier(.2,.9,.2,1);
-    z-index:4;                 /* under pocket (5) but above back (1) */
+    z-index:4;
     overflow:hidden;
   }
 
   .open .letter{
-    transform: translateY(-75px); /* pops up */
+    transform: translateY(-75px);
   }
+
+  /* tiny blinking cursor for typewriter */
+  .cursor{
+    display:inline-block;
+    width:10px;
+    margin-left:3px;
+    animation: blink 0.8s step-end infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
 
   /* hearts */
   .heart{
@@ -375,11 +417,16 @@
           <button id="yes">YES 😳💖</button>
           <button id="no">NO 🙃</button>
         </div>
+
+        <!-- ✅ LOADING BAR -->
+        <div class="loader" id="loader">
+          <div class="load-label" id="loadLabel">DOWNLOADING KISSES…</div>
+          <div class="bar"><div class="bar-fill" id="barFill"></div></div>
+        </div>
       </div>
 
       <div class="scene" id="scene">
         <div class="envelope-wrap">
-          <!-- ✅ CLICK THIS STATIC ENVELOPE -->
           <div class="envelope" id="envelope" role="button" aria-label="Open envelope">
             <div class="env-back"></div>
             <div class="env-open"></div>
@@ -388,10 +435,10 @@
               <h2 style="margin:0 0 8px; color:#ff2e8a; font-size:14px; font-family:'Press Start 2P', monospace;">
                 My Love,
               </h2>
-              <p id="letterText" style="margin:0; font-size:12px; line-height:1.45; opacity:.9; color:#4a1731;">
-                I just wanted you to know how much I love you. You make my days brighter, my heart calmer,
-                and my life better just by being in it. I’m so lucky to have you, and I’d choose you every time.
-              </p>
+
+              <!-- ✅ typewriter writes into this -->
+              <p id="letterText" style="margin:0; font-size:12px; line-height:1.45; opacity:.9; color:#4a1731;"></p>
+
               <div id="signature" style="margin-top:10px; font-weight:700; color:#ff2e8a; font-family:'Press Start 2P', monospace; font-size:12px;">
                 — Yours 💘
               </div>
@@ -503,9 +550,27 @@
   const subtitle = document.getElementById("subtitle");
   const song = document.getElementById("song");
 
+  // loading UI
+  const loader = document.getElementById("loader");
+  const barFill = document.getElementById("barFill");
+  const loadLabel = document.getElementById("loadLabel");
+
+  // typewriter targets
+  const letterTextEl = document.getElementById("letterText");
+  const FULL_LETTER =
+`I just wanted you to know how much I love you.
+You make my days brighter, my heart calmer,
+and my life better just by being in it.
+
+I’m so lucky to have you, and I’d choose you every time.`;
+
   let yesSize = 1;
   let noSize = 1;
   let heartRain = null;
+
+  // typewriter state
+  let typeTimer = null;
+  let typedOnce = false;
 
   document.addEventListener("mousemove", (e)=>{
     const rect = no.getBoundingClientRect();
@@ -545,35 +610,111 @@
     yes.style.transform = `scale(${yesSize})`;
   }
 
-  yes.addEventListener("click", ()=>{
-    buttons.style.display = "none";
-    title.textContent = "YAY!! 💖";
-    subtitle.textContent = "Open your letter…";
-    scene.classList.add("show");
-
-    if (song){
-      song.volume = 0.7;
-      
-      song.currentTime = 41;
-      
-      song.play().catch(()=>{});
-    }
-
+  function startHeartRain(){
     if (!heartRain){
       heartRain = setInterval(() => popHearts(2), 300);
     }
+  }
 
-    // auto-pop the letter a moment after YES
-    setTimeout(() => {
-      envelope.classList.add("open");
-      popHearts(28);
-    }, 500);
+  function runLoadingBar(done){
+    loader.classList.add("show");
+    barFill.style.width = "0%";
+
+    const labels = [
+      "DOWNLOADING KISSES…",
+      "PATCHING HEART.DLL…",
+      "INSTALLING CUDDLES…",
+      "FINALIZING LOVE.EXE…"
+    ];
+
+    let p = 0;
+    const interval = setInterval(() => {
+      p += 3 + Math.random()*7; // speed
+      if (p > 100) p = 100;
+
+      barFill.style.width = p + "%";
+
+      // change label sometimes
+      if (Math.random() < 0.18){
+        loadLabel.textContent = labels[Math.floor(Math.random()*labels.length)];
+      }
+
+      if (p >= 100){
+        clearInterval(interval);
+        setTimeout(() => {
+          loader.classList.remove("show");
+          done && done();
+        }, 250);
+      }
+    }, 90);
+  }
+
+  function typewriter(text, el, speed=18){
+    if (typeTimer) clearInterval(typeTimer);
+    el.innerHTML = "";
+    const cursor = document.createElement("span");
+    cursor.className = "cursor";
+    cursor.textContent = "▌";
+    el.appendChild(cursor);
+
+    let i = 0;
+    typeTimer = setInterval(() => {
+      // before cursor
+      cursor.insertAdjacentText("beforebegin", text[i] || "");
+      i++;
+
+      if (i >= text.length){
+        clearInterval(typeTimer);
+        typeTimer = null;
+        // keep cursor for a bit then remove
+        setTimeout(() => cursor.remove(), 700);
+      }
+    }, speed);
+  }
+
+  function openEnvelopeAndType(){
+    envelope.classList.add("open");
+    popHearts(28);
+
+    if (!typedOnce){
+      typedOnce = true;
+      // small delay so it starts after it pops up
+      setTimeout(() => typewriter(FULL_LETTER, letterTextEl, 16), 250);
+    }
+  }
+
+  yes.addEventListener("click", ()=>{
+    buttons.style.display = "none";
+    title.textContent = "YAY!! 💖";
+    subtitle.textContent = "One sec…";
+    scene.classList.add("show");
+
+    // music
+    if (song){
+      song.volume = 0.7;
+      // your start point
+      song.currentTime = 41;
+      song.play().catch(()=>{});
+    }
+
+    startHeartRain();
+
+    // ✅ show loading bar, then open + type
+    runLoadingBar(() => {
+      subtitle.textContent = "Open your letter…";
+      openEnvelopeAndType();
+    });
   });
 
-  // tap envelope to pop letter in/out
+  // tap envelope toggles pop, and if first time typing didn't happen (edge case), type it
   envelope.addEventListener("click", ()=>{
     envelope.classList.toggle("open");
     popHearts(12);
+
+    if (envelope.classList.contains("open") && !typedOnce){
+      typedOnce = true;
+      setTimeout(() => typewriter(FULL_LETTER, letterTextEl, 16), 200);
+    }
   });
 
   function popHearts(n){
@@ -591,3 +732,4 @@
 </script>
 </body>
 </html>
+
