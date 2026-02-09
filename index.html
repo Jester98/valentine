@@ -1,70 +1,302 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-<title>Be My Valentine?</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Be My Valentine? 💘</title>
+
 <style>
-body{
-  background: linear-gradient(135deg,#ff9ecf,#ffe3f1);
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-family:Arial;
-  text-align:center;
-  overflow:hidden;
-}
-.card{
-  background:white;
-  padding:40px;
-  border-radius:20px;
-  box-shadow:0 20px 50px rgba(0,0,0,.2);
-}
-button{
-  padding:12px 20px;
-  margin:10px;
-  font-size:18px;
-  border:none;
-  border-radius:30px;
-  cursor:pointer;
-}
-#yes{
-  background:#ff4da6;
-  color:white;
-}
-#no{
-  background:#eee;
-  color:#ff4da6;
-  position:relative;
-}
+  body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    text-align:center;
+    background: linear-gradient(135deg,#ff9ecf,#ffe3f1);
+    overflow:hidden;
+  }
+
+  .card{
+    width:min(560px, 92vw);
+    background:white;
+    padding:34px 20px 28px;
+    border-radius:22px;
+    box-shadow:0 20px 60px rgba(0,0,0,.18);
+    position:relative;
+  }
+
+  h1{ margin:0 0 16px; font-size: clamp(26px, 4vw, 38px); }
+  p{ margin:0 0 18px; opacity:.8; }
+
+  .btns{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:8px;
+  }
+
+  button{
+    padding:14px 22px;
+    font-size:18px;
+    border:none;
+    border-radius:999px;
+    cursor:pointer;
+    transition: transform .2s ease;
+    user-select:none;
+  }
+
+  #yes{
+    background:#ff4da6;
+    color:white;
+    font-weight:700;
+    box-shadow:0 10px 30px rgba(255,77,166,.35);
+  }
+
+  #no{
+    background:#eee;
+    color:#ff4da6;
+    font-weight:700;
+    position:absolute;
+    left:50%;
+    transform: translateX(90px);
+    top: 175px;
+    border: 2px solid rgba(255,77,166,.25);
+  }
+
+  /* Envelope scene */
+  .scene{
+    display:none;
+    margin-top:22px;
+  }
+
+  .scene.show{ display:block; }
+
+  .hint{
+    margin: 10px 0 0;
+    font-size: 13px;
+    opacity:.65;
+  }
+
+  .envelope-wrap{
+    display:grid;
+    place-items:center;
+    padding: 18px 0 4px;
+  }
+
+  .envelope{
+    width: 280px;
+    height: 180px;
+    position: relative;
+    transform: translateZ(0);
+  }
+
+  /* back */
+  .env-back{
+    position:absolute;
+    inset:0;
+    background: #ff7ac4;
+    border-radius: 16px;
+    box-shadow:0 14px 40px rgba(0,0,0,.16);
+    overflow:hidden;
+  }
+
+  /* bottom pocket */
+  .env-pocket{
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(135deg, transparent 50%, rgba(255,255,255,.55) 50%) left,
+      linear-gradient(225deg, transparent 50%, rgba(255,255,255,.55) 50%) right;
+    background-size: 50% 100%;
+    background-repeat:no-repeat;
+    border-radius: 16px;
+    opacity:.65;
+  }
+
+  /* letter */
+  .letter{
+    position:absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 14px;
+    height: 150px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(0,0,0,.12);
+    transform: translateY(64px);
+    transition: transform 0.9s cubic-bezier(.2,.9,.2,1);
+    padding: 16px 16px 14px;
+    text-align:left;
+    overflow:hidden;
+  }
+
+  .letter h2{
+    margin:0 0 8px;
+    font-size: 16px;
+    color:#ff2e8a;
+  }
+  .letter p{
+    margin:0;
+    font-size: 14px;
+    line-height: 1.35;
+    opacity:.9;
+  }
+  .sig{
+    margin-top:10px;
+    font-weight:700;
+    color:#ff2e8a;
+  }
+
+  /* flap */
+  .flap{
+    position:absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 0;
+    border-left: 140px solid transparent;
+    border-right: 140px solid transparent;
+    border-bottom: 110px solid #ff4da6;
+    transform-origin: top;
+    transform: rotateX(0deg);
+    transition: transform 0.8s cubic-bezier(.2,.9,.2,1);
+    filter: drop-shadow(0 8px 10px rgba(0,0,0,.08));
+  }
+
+  /* open state */
+  .open .flap{
+    transform: rotateX(180deg);
+  }
+  .open .letter{
+    transform: translateY(-30px);
+  }
+
+  /* floating hearts */
+  .heart{
+    position:fixed;
+    top:-30px;
+    font-size: 22px;
+    animation: fall 1.6s ease-in forwards;
+    pointer-events:none;
+  }
+  @keyframes fall{
+    to{
+      transform: translateY(110vh) rotate(260deg);
+      opacity:0;
+    }
+  }
 </style>
 </head>
-<body>
 
-<div class="card">
-<h1>Will you be my Valentine? 💘</h1>
-<button id="yes">Yes 😳</button>
-<button id="no">No 🙃</button>
-<h2 id="msg" style="display:none;color:#ff4da6;">YAYYYY 💖</h2>
-</div>
+<body>
+  <main class="card">
+    <h1 id="title">Will you be my Valentine? 💘</h1>
+    <p id="subtitle">I promise snacks, good vibes, and a cute date.</p>
+
+    <div class="btns" id="buttons">
+      <button id="yes">Yes 😳💖</button>
+      <button id="no">No 🙃</button>
+    </div>
+
+    <!-- Envelope + Letter -->
+    <div class="scene" id="scene">
+      <div class="envelope-wrap">
+        <div class="envelope" id="envelope">
+          <div class="env-back">
+            <div class="env-pocket"></div>
+          </div>
+
+          <div class="letter" id="letter">
+            <h2>My Love,</h2>
+            <p id="letterText">
+              I just wanted you to know how much I love you. You make my days brighter, my heart calmer,
+              and my life better just by being in it. I’m so lucky to have you, and I’d choose you every time.
+            </p>
+            <div class="sig" id="signature">— Yours 💘</div>
+          </div>
+
+          <div class="flap"></div>
+        </div>
+      </div>
+      <div class="hint">Tap the envelope 💌</div>
+    </div>
+  </main>
 
 <script>
-const noBtn = document.getElementById("no");
-const yesBtn = document.getElementById("yes");
-const msg = document.getElementById("msg");
+  const yes = document.getElementById("yes");
+  const no  = document.getElementById("no");
+  const scene = document.getElementById("scene");
+  const envelope = document.getElementById("envelope");
+  const buttons = document.getElementById("buttons");
+  const title = document.getElementById("title");
+  const subtitle = document.getElementById("subtitle");
 
-yesBtn.onclick = () => {
-  msg.style.display="block";
-  yesBtn.innerText="BEST CHOICE 💖";
-  noBtn.style.display="none";
-}
+  // --- Moving NO button + growing YES button ---
+  let yesSize = 1;
+  let noSize = 1;
 
-noBtn.onmouseover = () => {
-  noBtn.style.position="absolute";
-  noBtn.style.left=Math.random()*300+"px";
-  noBtn.style.top=Math.random()*300+"px";
-}
+  document.addEventListener("mousemove", (e)=>{
+    const rect = no.getBoundingClientRect();
+    const distance = Math.hypot(
+      e.clientX - (rect.left + rect.width/2),
+      e.clientY - (rect.top + rect.height/2)
+    );
+    if(distance < 120) moveNo();
+  });
+
+  no.addEventListener("mouseover", moveNo);
+  no.addEventListener("click", moveNo);
+
+  function moveNo(){
+    const x = Math.random() * (window.innerWidth - 110);
+    const y = Math.random() * (window.innerHeight - 70);
+    no.style.left = x + "px";
+    no.style.top  = y + "px";
+
+    noSize -= 0.05;
+    if(noSize < 0.45) noSize = 0.45;
+    no.style.transform = `scale(${noSize})`;
+
+    yesSize += 0.10;
+    yes.style.transform = `scale(${yesSize})`;
+  }
+
+  // --- YES click: show envelope + open it ---
+  yes.addEventListener("click", ()=>{
+    buttons.style.display = "none";
+    title.textContent = "YAY!! 💖";
+    subtitle.textContent = "Open your letter…";
+    scene.classList.add("show");
+
+    // auto open after a moment
+    setTimeout(() => {
+      envelope.classList.add("open");
+      popHearts(28);
+    }, 500);
+  });
+
+  // allow tapping envelope to toggle open/close
+  envelope.addEventListener("click", ()=>{
+    envelope.classList.toggle("open");
+    popHearts(12);
+  });
+
+  function popHearts(n){
+    for(let i=0;i<n;i++){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = Math.random() > 0.5 ? "💖" : "💘";
+      h.style.left = (Math.random() * 100) + "vw";
+      h.style.fontSize = (18 + Math.random()*22) + "px";
+      h.style.animationDuration = (1.2 + Math.random()*1.2) + "s";
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), 2200);
+    }
+  }
 </script>
-
 </body>
 </html>
+
