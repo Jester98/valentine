@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+<head>
+<title>Be My Valentine?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body{
+  background: linear-gradient(135deg,#ff9ecf,#ffe3f1);
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial;
+  text-align:center;
+  overflow:hidden;
+}
+.card{
+  background:white;
+  padding:40px;
+  border-radius:20px;
+  box-shadow:0 20px 50px rgba(0,0,0,.2);
+}
+button{
+  padding:12px 20px;
+  margin:10px;
+  font-size:18px;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+}
+#yes{
+  background:#ff4da6;
+  color:white;
+}
+#no{
+  background:#eee;
+  color:#ff4da6;
+  position:relative;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h1>Will you be my Valentine? 💘</h1>
+<button id="yes">Yes 😳</button>
+<button id="no">No 🙃</button>
+<h2 id="msg" style="display:none;color:#ff4da6;">YAYYYY 💖</h2>
+</div>
+
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const msg = document.getElementById("msg");
+
+yesBtn.onclick = () => {
+  msg.style.display="block";
+  yesBtn.innerText="BEST CHOICE 💖";
+  noBtn.style.display="none";
+}
+
+noBtn.onmouseover = () => {
+  noBtn.style.position="absolute";
+  noBtn.style.left=Math.random()*300+"px";
+  noBtn.style.top=Math.random()*300+"px";
+}
+</script>
+
+</body>
+</html>
