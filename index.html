@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Be My Valentine? 💘</title>
 
+<!-- Free pixel font (retro look) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -128,13 +129,13 @@
     background:
       linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35)),
       linear-gradient(135deg, var(--panel), var(--panel2));
-    position: relative; /* ✅ create stacking context */
+    position: relative;
   }
 
-  /* ✅ HEADER IS BEHIND THE ENVELOPE SCENE */
+  /* HEADER BEHIND THE ENVELOPE SCENE */
   .header{
     position: relative;
-    z-index: 2; /* lower than scene */
+    z-index: 2;
   }
 
   h1{
@@ -199,12 +200,12 @@
     position:relative;
   }
 
-  /* ✅ SCENE ALWAYS ON TOP OF HEADER */
+  /* SCENE ABOVE HEADER */
   .scene{
     display:none;
     margin-top:20px;
     position: relative;
-    z-index: 10; /* ✅ above header/title */
+    z-index: 10;
   }
   .scene.show{ display:block; }
 
@@ -223,7 +224,6 @@
     position: relative;
   }
 
-  /* ✅ Envelope does NOT clip the letter anymore */
   .envelope{
     width:260px;
     height:170px;
@@ -231,7 +231,7 @@
     margin: 10px auto 0;
     transform: translateX(-18px);
     perspective: 900px;
-    overflow: visible; /* ✅ */
+    overflow: visible; /* IMPORTANT */
   }
 
   .env-back{
@@ -242,7 +242,7 @@
     z-index:1;
   }
 
-  /* ✅ Letter can rise above envelope, but pocket hides the bottom */
+  /* ✅ FIX: letter starts higher and comes out more */
   .letter{
     position:absolute;
     background:white;
@@ -253,7 +253,7 @@
     border-radius:10px;
     padding:15px;
     box-shadow:0 8px 20px rgba(0,0,0,.15);
-    transform: translateY(115px); /* hidden deeper */
+    transform: translateY(85px); /* was 115px */
     transition: transform 0.75s cubic-bezier(.2,.9,.2,1);
     z-index:4;
     overflow:hidden;
@@ -262,7 +262,7 @@
   .env-pocket{
     position:absolute;
     inset:0;
-    z-index:6; /* pocket always above letter bottom */
+    z-index:6;
     pointer-events:none;
   }
 
@@ -312,6 +312,7 @@
     border-bottom-right-radius:14px;
   }
 
+  /* FLAP */
   .flap{
     position:absolute;
     top:-1px;
@@ -323,11 +324,15 @@
     border-top:90px solid #ff4da6;
     transform-origin: top center;
     transition: transform 0.6s cubic-bezier(.2,.9,.2,1);
-    z-index:7; /* flap above everything */
+    z-index:7; /* closed: above */
   }
 
-  .open .letter{ transform: translateY(-72px); }
-  .open .flap{ transform: rotateX(180deg); }
+  /* ✅ FIX: open state (letter up + flap behind letter) */
+  .open .letter{ transform: translateY(-95px); }
+  .open .flap{
+    transform: rotateX(180deg);
+    z-index:3; /* behind letter (letter is 4) */
+  }
 
   /* hearts */
   .heart{
@@ -369,7 +374,6 @@
     </div>
 
     <div class="window-body">
-      <!-- ✅ HEADER WRAPPER (behind scene) -->
       <div class="header">
         <h1 id="title">Jay, will you be my Valentine? 💘</h1>
         <p id="subtitle"></p>
@@ -380,7 +384,6 @@
         </div>
       </div>
 
-      <!-- ✅ SCENE ABOVE HEADER -->
       <div class="scene" id="scene">
         <div class="envelope-wrap">
           <div class="envelope" id="envelope">
@@ -590,4 +593,3 @@
 </script>
 </body>
 </html>
-
