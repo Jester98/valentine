@@ -5,7 +5,24 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Be My Valentine? 💘</title>
 
+<!-- Free pixel font (retro look) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
 <style>
+  :root{
+    --pink1:#ff9ecf;
+    --pink2:#ffe3f1;
+    --win-border:#d86aa6;
+    --win-dark:#b84c88;
+    --panel:#ffd3ea;
+    --panel2:#ffc0e0;
+    --text:#5a1f3c;
+    --btn:#ffb0d9;
+    --btn2:#ff93cc;
+  }
+
   body{
     margin:0;
     height:100vh;
@@ -15,7 +32,7 @@
     font-family: system-ui, Arial;
     text-align:center;
     overflow:hidden;
-    background: linear-gradient(135deg,#ff9ecf,#ffe3f1);
+    background: linear-gradient(135deg,var(--pink1),var(--pink2));
   }
 
   /* SIDE PHOTO RAILS (NOT BEHIND CARD) */
@@ -43,67 +60,164 @@
     100% { transform: translate(-50%,-50%) translateY(0px) rotate(-2deg); }
   }
 
-  /* MAIN CARD */
+  /* ✅ RETRO APP WINDOW */
   .card{
-    width:min(560px, 92vw);
-    background:white;
-    padding:34px 20px 28px;
-    border-radius:22px;
-    box-shadow:0 20px 60px rgba(0,0,0,.18);
+    width:min(640px, 94vw);
+    border-radius: 12px;
     position:relative;
     z-index: 5;
+
+    /* chunky retro border */
+    background: #ffe6f4;
+    border: 4px solid var(--win-border);
+    box-shadow:
+      0 18px 55px rgba(0,0,0,.22),
+      inset 0 0 0 2px rgba(255,255,255,.35);
+    overflow:hidden;
   }
 
-  h1{ margin:0 0 16px; font-size: clamp(26px, 4vw, 38px); }
-  p{ margin:0 0 18px; opacity:.8; }
+  .winbar{
+    height: 46px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 0 12px;
+    background: linear-gradient(180deg, #ffc5e4, #ff9fd0);
+    border-bottom: 3px solid var(--win-border);
+  }
+
+  .winbar-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+
+  .win-title{
+    font-family: "Press Start 2P", monospace;
+    font-size: 10px;
+    letter-spacing: .5px;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .hearts-row{
+    display:flex;
+    gap:6px;
+    transform: translateY(1px);
+  }
+  .hearts-row span{
+    font-size: 14px;
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,.6));
+  }
+
+  .win-controls{
+    display:flex;
+    gap:7px;
+  }
+
+  .ctrl{
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    background: #ffd7ee;
+    border: 2px solid var(--win-dark);
+    box-shadow:
+      inset 2px 2px 0 rgba(255,255,255,.65),
+      inset -2px -2px 0 rgba(0,0,0,.10);
+  }
+  .ctrl:active{
+    box-shadow:
+      inset -2px -2px 0 rgba(255,255,255,.55),
+      inset 2px 2px 0 rgba(0,0,0,.12);
+  }
+
+  .window-body{
+    padding: 26px 20px 22px;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,.35)),
+      linear-gradient(135deg, var(--panel), var(--panel2));
+  }
+
+  /* ✅ PIXEL TITLE + SUBTITLE */
+  h1{
+    margin:0 0 14px;
+    font-family: "Press Start 2P", monospace;
+    font-size: clamp(18px, 2.6vw, 26px);
+    line-height: 1.25;
+    color: var(--text);
+    text-shadow: 0 2px 0 rgba(255,255,255,.65);
+  }
+
+  p{
+    margin:0 0 16px;
+    opacity:.85;
+    color:#6d2a4b;
+    font-size: 14px;
+  }
 
   .btns{
     display:flex;
-    gap:12px;
+    gap:14px;
     justify-content:center;
     flex-wrap:wrap;
-    margin-top:8px;
+    margin-top:10px;
   }
 
+  /* ✅ RETRO BUTTONS */
   button{
-    padding:14px 22px;
-    font-size:18px;
-    border:none;
-    border-radius:999px;
+    padding:12px 22px;
+    font-family: "Press Start 2P", monospace;
+    font-size: 12px;
+    border-radius: 8px;
     cursor:pointer;
-    transition: transform .2s ease;
     user-select:none;
+    border: 2px solid var(--win-dark);
+    background: linear-gradient(180deg, var(--btn), var(--btn2));
+    color: #5a1f3c;
+    box-shadow:
+      inset 2px 2px 0 rgba(255,255,255,.7),
+      inset -2px -2px 0 rgba(0,0,0,.10),
+      0 6px 0 rgba(0,0,0,.12);
+    transition: transform .12s ease;
+  }
+
+  button:active{
+    transform: translateY(2px);
+    box-shadow:
+      inset -2px -2px 0 rgba(255,255,255,.55),
+      inset 2px 2px 0 rgba(0,0,0,.12),
+      0 2px 0 rgba(0,0,0,.10);
   }
 
   #yes{
-    background:#ff4da6;
+    border-color:#a53a74;
+    background: linear-gradient(180deg, #ff7dc5, #ff4da6);
     color:white;
-    font-weight:700;
-    box-shadow:0 10px 30px rgba(255,77,166,.35);
+    text-shadow: 0 1px 0 rgba(0,0,0,.15);
   }
 
   #no{
-    background:#eee;
-    color:#ff4da6;
-    font-weight:700;
-    border:2px solid rgba(255,77,166,.25);
+    background: linear-gradient(180deg, #ffe5f3, #ffd1ea);
+    color:#a53a74;
     position:relative;
   }
 
   /* Envelope scene */
-  .scene{ display:none; margin-top:22px; }
+  .scene{ display:none; margin-top:20px; }
   .scene.show{ display:block; }
 
   .hint{
     margin: 10px 0 0;
-    font-size: 13px;
-    opacity:.65;
+    font-size: 12px;
+    opacity:.75;
+    font-family: "Press Start 2P", monospace;
+    color: #6d2a4b;
   }
 
   .envelope-wrap{
     display:grid;
     place-items:center;
-    padding: 18px 0 4px;
+    padding: 14px 0 4px;
     position: relative;
     z-index: 20;
   }
@@ -143,7 +257,7 @@
     overflow:hidden;
   }
 
-  /* ✅ REFERENCE-STYLE POCKET (3-piece) */
+  /* pocket pieces */
   .env-pocket{
     position:absolute;
     inset:0;
@@ -239,40 +353,60 @@
   <audio id="song" src="K.mp3" preload="auto"></audio>
 
   <main class="card">
-    <h1 id="title">Jay, will you be my Valentine? 💘</h1>
-    <p id="subtitle"></p>
-
-    <div class="btns" id="buttons">
-      <button id="yes">Yes 😳💖</button>
-      <button id="no">No 🙃</button>
+    <!-- ✅ Retro window bar -->
+    <div class="winbar">
+      <div class="winbar-left">
+        <div class="hearts-row" aria-hidden="true">
+          <span>💗</span><span>💗</span><span>💗</span><span>💗</span><span>💗</span>
+        </div>
+        <div class="win-title">VALENTINE.EXE</div>
+      </div>
+      <div class="win-controls" aria-hidden="true">
+        <div class="ctrl"></div>
+        <div class="ctrl"></div>
+        <div class="ctrl"></div>
+      </div>
     </div>
 
-    <div class="scene" id="scene">
-      <div class="envelope-wrap">
-        <div class="envelope" id="envelope">
-          <div class="env-back"></div>
+    <div class="window-body">
+      <h1 id="title">Jay, will you be my Valentine? 💘</h1>
+      <p id="subtitle"></p>
 
-          <div class="letter" id="letter">
-            <h2 style="margin:0 0 8px; color:#ff2e8a; font-size:16px;">My Love,</h2>
-            <p id="letterText" style="margin:0; font-size:14px; line-height:1.35; opacity:.9;">
-              I just wanted you to know how much I love you. You make my days brighter, my heart calmer,
-              and my life better just by being in it. I’m so lucky to have you, and I’d choose you every time.
-            </p>
-            <div id="signature" style="margin-top:10px; font-weight:700; color:#ff2e8a;">— Yours 💘</div>
-          </div>
-
-          <!-- ✅ pocket pieces -->
-          <div class="env-pocket">
-            <div class="pocket-bottom"></div>
-            <div class="pocket-left"></div>
-            <div class="pocket-right"></div>
-            <div class="pocket-lip"></div>
-          </div>
-
-          <div class="flap"></div>
-        </div>
+      <div class="btns" id="buttons">
+        <button id="yes">YES 😳💖</button>
+        <button id="no">NO 🙃</button>
       </div>
-      <div class="hint">Tap the envelope 💌</div>
+
+      <div class="scene" id="scene">
+        <div class="envelope-wrap">
+          <div class="envelope" id="envelope">
+            <div class="env-back"></div>
+
+            <div class="letter" id="letter">
+              <h2 style="margin:0 0 8px; color:#ff2e8a; font-size:14px; font-family:'Press Start 2P', monospace;">
+                My Love,
+              </h2>
+              <p id="letterText" style="margin:0; font-size:12px; line-height:1.45; opacity:.9; color:#4a1731;">
+                I just wanted you to know how much I love you. You make my days brighter, my heart calmer,
+                and my life better just by being in it. I’m so lucky to have you, and I’d choose you every time.
+              </p>
+              <div id="signature" style="margin-top:10px; font-weight:700; color:#ff2e8a; font-family:'Press Start 2P', monospace; font-size:12px;">
+                — Yours 💘
+              </div>
+            </div>
+
+            <div class="env-pocket">
+              <div class="pocket-bottom"></div>
+              <div class="pocket-left"></div>
+              <div class="pocket-right"></div>
+              <div class="pocket-lip"></div>
+            </div>
+
+            <div class="flap"></div>
+          </div>
+        </div>
+        <div class="hint">TAP THE ENVELOPE 💌</div>
+      </div>
     </div>
   </main>
 
@@ -323,7 +457,6 @@
       const xMin = side === "left" ? 2 : 72;
       const xMax = side === "left" ? 28 : 98;
 
-      // bigger photos
       img.style.width = rand(170, 260) + "px";
 
       let x, y, ok = false;
@@ -425,13 +558,11 @@
     subtitle.textContent = "Open your letter…";
     scene.classList.add("show");
 
-    // play music after YES
     if (song){
       song.volume = 0.7;
       song.play().catch(()=>{});
     }
 
-    // start continuous falling hearts AFTER YES (only once)
     if (!heartRain){
       heartRain = setInterval(() => popHearts(2), 300);
     }
