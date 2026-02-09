@@ -222,19 +222,35 @@
   no.addEventListener("mouseover", moveNo);
   no.addEventListener("click", moveNo);
 
-  function moveNo(){
-    const x = Math.random() * (window.innerWidth - 110);
-    const y = Math.random() * (window.innerHeight - 70);
-    no.style.left = x + "px";
-    no.style.top  = y + "px";
+function moveNo(){
+  const card = document.querySelector(".card");
+  const cardRect = card.getBoundingClientRect();
+  const btnRect = no.getBoundingClientRect();
 
-    noSize -= 0.05;
-    if(noSize < 0.45) noSize = 0.45;
-    no.style.transform = `scale(${noSize})`;
+  // keep inside the card
+  const minX = cardRect.left + 10;
+  const maxX = cardRect.right - btnRect.width - 10;
 
-    yesSize += 0.10;
-    yes.style.transform = `scale(${yesSize})`;
-  }
+  const minY = cardRect.top + 80;
+  const maxY = cardRect.bottom - btnRect.height - 10;
+
+  const newX = Math.random() * (maxX - minX) + minX;
+  const newY = Math.random() * (maxY - minY) + minY;
+
+  no.style.position = "fixed";
+  no.style.left = newX + "px";
+  no.style.top = newY + "px";
+
+  // shrinking NO
+  noSize -= 0.05;
+  if(noSize < 0.45) noSize = 0.45;
+  no.style.transform = `scale(${noSize})`;
+
+  // growing YES
+  yesSize += 0.10;
+  yes.style.transform = `scale(${yesSize})`;
+}
+
 
   // --- YES click: show envelope + open it ---
   yes.addEventListener("click", ()=>{
