@@ -84,32 +84,51 @@
     padding: 18px 0 4px;
   }
 
-  .envelope{
+.envelope{
   width:260px;
   height:170px;
   position:relative;
   margin:40px auto 0;
+  overflow:hidden;   /* THIS is the key */
 }
+
 
 
 .env-back{
   position:absolute;
-  width:100%;
-  height:100%;
+  inset:0;
   background:#ff7ac4;
   border-radius:14px;
-  bottom:0;
+  z-index:1;
 }
 
+/* Pocket/front of envelope (must be IN FRONT of the letter) */
 .env-pocket{
   position:absolute;
-  width:100%;
-  height:100%;
+  inset:0;
   background:linear-gradient(135deg,#ff9ed1,#ff6fb8);
   clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
   border-radius:14px;
+  z-index:3;
 }
 
+/* Letter starts BEHIND the pocket */
+.letter{
+  position:absolute;
+  background:white;
+  width:85%;
+  left:7.5%;
+  bottom:10px;
+  height:135px;
+  border-radius:10px;
+  padding:15px;
+  box-shadow:0 8px 20px rgba(0,0,0,.15);
+  transform: translateY(75px); /* start mostly hidden inside */
+  transition: transform 0.75s cubic-bezier(.2,.9,.2,1);
+  z-index:2; /* behind pocket */
+}
+
+/* Flap is the very top layer */
 .flap{
   position:absolute;
   top:-1px;
@@ -119,9 +138,9 @@
   border-left:130px solid transparent;
   border-right:130px solid transparent;
   border-top:90px solid #ff4da6;
-  transform-origin:top center;
-  transition:0.6s;
-  z-index:3;
+  transform-origin: top center;
+  transition: transform 0.6s cubic-bezier(.2,.9,.2,1);
+  z-index:4;
 }
 
 
@@ -140,12 +159,12 @@
   overflow:hidden;
 }
 
-.open .flap{
-  transform: rotateX(180deg);
+.open .letter{
+  transform: translateY(-35px);
 }
 
-.open .letter{
-  transform: translateY(-65px);
+.open .flap{
+  transform: rotateX(180deg);
 }
 
 
