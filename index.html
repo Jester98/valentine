@@ -51,7 +51,7 @@
     border-radius:22px;
     box-shadow:0 20px 60px rgba(0,0,0,.18);
     position:relative;
-    z-index: 5;
+    z-index: 5; /* above side photos */
   }
 
   h1{ margin:0 0 16px; font-size: clamp(26px, 4vw, 38px); }
@@ -105,16 +105,17 @@
     place-items:center;
     padding: 18px 0 4px;
     position: relative;
-    z-index: 20;
+    z-index: 20; /* ✅ keeps envelope/letter above the title area */
   }
 
+  /* shift envelope left a bit */
   .envelope{
     width:260px;
     height:170px;
     position:relative;
     margin: 10px auto 0;
-    overflow:hidden;
-    transform: translateX(-18px);
+    overflow:hidden;               /* makes letter look inside */
+    transform: translateX(-18px);  /* move left */
   }
 
   .env-back{
@@ -125,48 +126,33 @@
     z-index:1;
   }
 
-  /* LETTER (starts inside envelope) */
+  /* Letter BEHIND pocket (but above the card header area) */
   .letter{
     position:absolute;
     background:white;
     width:85%;
     left:7.5%;
-    bottom:0;
-    height:140px;
+    bottom:10px;
+    height:135px;
     border-radius:10px;
     padding:15px;
     box-shadow:0 8px 20px rgba(0,0,0,.15);
-    transform: translateY(105px); /* deeper inside */
+    transform: translateY(88px); /* start hidden */
     transition: transform 0.75s cubic-bezier(.2,.9,.2,1);
-    z-index:6; /* above card content, below pocket */
+    z-index:6; /* ✅ higher so it doesn't go under the top section */
   }
 
-  /* ✅ FIXED POCKET: only covers the bottom (no giant V eating letter) */
+  /* Pocket/front OVER letter */
   .env-pocket{
     position:absolute;
-    left:0;
-    bottom:0;
-    width:100%;
-    height:62%;
+    inset:0;
     background:linear-gradient(135deg,#ff9ed1,#ff6fb8);
-    border-bottom-left-radius:14px;
-    border-bottom-right-radius:14px;
-    z-index:7;
+    clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
+    border-radius:14px;
+    z-index:7; /* ✅ above letter */
   }
 
-  /* top V-fold detail */
-  .env-pocket::before{
-    content:"";
-    position:absolute;
-    top:-62px;
-    left:0;
-    width:0;
-    height:0;
-    border-left:130px solid transparent;
-    border-right:130px solid transparent;
-    border-bottom:62px solid #ff7ac4; /* matches env-back */
-  }
-
+  /* Flap top layer */
   .flap{
     position:absolute;
     top:-1px;
@@ -178,13 +164,17 @@
     border-top:90px solid #ff4da6;
     transform-origin: top center;
     transition: transform 0.6s cubic-bezier(.2,.9,.2,1);
-    z-index:8;
+    z-index:8; /* ✅ above everything */
   }
 
-  .open .letter{ transform: translateY(-35px); }
-  .open .flap{ transform: rotateX(180deg); }
+  .open .letter{
+    transform: translateY(-35px); /* slides out */
+  }
+  .open .flap{
+    transform: rotateX(180deg);
+  }
 
-  /* hearts */
+  /* floating hearts */
   .heart{
     position:fixed;
     top:-30px;
@@ -203,13 +193,11 @@
 </head>
 
 <body>
+  <!-- SIDE PHOTOS -->
   <div id="float-bg" aria-hidden="true"></div>
 
-  <!-- MUSIC: upload K.mp3 next to index.html -->
-  <audio id="song" src="K.mp3" preload="auto"></audio>
-
   <main class="card">
-    <h1 id="title">Jay, will you be my Valentine? 💘</h1>
+    <h1 id="title">Will you be my Valentine? 💘</h1>
     <p id="subtitle">I promise snacks, good vibes, and a cute date.</p>
 
     <div class="btns" id="buttons">
@@ -217,11 +205,11 @@
       <button id="no">No 🙃</button>
     </div>
 
+    <!-- Envelope + Letter -->
     <div class="scene" id="scene">
       <div class="envelope-wrap">
         <div class="envelope" id="envelope">
           <div class="env-back"></div>
-
           <div class="letter" id="letter">
             <h2 style="margin:0 0 8px; color:#ff2e8a; font-size:16px;">My Love,</h2>
             <p id="letterText" style="margin:0; font-size:14px; line-height:1.35; opacity:.9;">
@@ -230,7 +218,6 @@
             </p>
             <div id="signature" style="margin-top:10px; font-weight:700; color:#ff2e8a;">— Yours 💘</div>
           </div>
-
           <div class="env-pocket"></div>
           <div class="flap"></div>
         </div>
@@ -240,7 +227,7 @@
   </main>
 
 <script>
-  // SIDE PHOTOS (ONLY LEFT/RIGHT) + LESS OVERLAP
+  // SIDE PHOTOS (ONLY LEFT/RIGHT)
   const floatBg = document.getElementById("float-bg");
   const images = [
     "image_2026-02-09_120920292.png",
@@ -261,61 +248,31 @@
     "image_2026-02-09_121558715.png"
   ];
 
-  const COUNT_PER_SIDE = 7;
+  const COUNT_PER_SIDE = 7; // ✅ more images
 
   function rand(min, max){ return Math.random() * (max - min) + min; }
 
   function spawnSidePhotos(){
     floatBg.innerHTML = "";
 
-    const placed = [];
-    const minDist = 200;
-    const triesPerImg = 50;
-
-    function farEnough(px, py){
-      for (const p of placed){
-        if (Math.hypot(px - p.x, py - p.y) < minDist) return false;
-      }
-      return true;
-    }
-
     const make = (side) => {
       const img = document.createElement("img");
       img.src = images[Math.floor(Math.random() * images.length)];
       img.className = "float-photo";
 
-      const xMin = side === "left" ? 2 : 72;
-      const xMax = side === "left" ? 28 : 98;
-
-      img.style.width = rand(170, 260) + "px";
-
-      let x, y, ok = false;
-      for (let t=0; t<triesPerImg; t++){
-        x = rand(xMin, xMax);
-        y = rand(5, 95);
-
-        const px = (x/100) * window.innerWidth;
-        const py = (y/100) * window.innerHeight;
-
-        if (farEnough(px, py)){
-          placed.push({x:px, y:py});
-          ok = true;
-          break;
-        }
-      }
-
-      if (!ok){
-        x = rand(xMin, xMax);
-        y = rand(5, 95);
-        placed.push({x:(x/100)*window.innerWidth, y:(y/100)*window.innerHeight});
-      }
+      // ✅ spread wider on sides
+      const x = side === "left" ? rand(2, 28) : rand(72, 98);
+      // ✅ spread vertically more
+      const y = rand(5, 95);
 
       img.style.left = x + "vw";
       img.style.top  = y + "vh";
 
+      // ✅ bigger images
+      img.style.width = rand(170, 260) + "px";
+
       img.style.animationDuration = rand(9, 16) + "s";
       img.style.animationDelay = rand(-8, 0) + "s";
-
       return img;
     };
 
@@ -335,14 +292,8 @@
   const title = document.getElementById("title");
   const subtitle = document.getElementById("subtitle");
 
-  // MUSIC
-  const song = document.getElementById("song");
-
   let yesSize = 1;
   let noSize = 1;
-
-  // continuous heart rain handle
-  let heartRain = null;
 
   document.addEventListener("mousemove", (e)=>{
     const rect = no.getBoundingClientRect();
@@ -388,24 +339,12 @@
     subtitle.textContent = "Open your letter…";
     scene.classList.add("show");
 
-    // play music after YES
-    if (song){
-      song.volume = 0.7;
-      song.play().catch(()=>{});
-    }
-
-    // start continuous falling hearts AFTER YES (only once)
-    if (!heartRain){
-      heartRain = setInterval(() => popHearts(2), 300); // adjust speed here
-    }
-
     setTimeout(() => {
       envelope.classList.add("open");
       popHearts(28);
     }, 500);
   });
 
-  // clicking envelope still gives an extra burst
   envelope.addEventListener("click", ()=>{
     envelope.classList.toggle("open");
     popHearts(12);
@@ -420,7 +359,7 @@
       h.style.fontSize = (18 + Math.random()*22) + "px";
       h.style.animationDuration = (1.2 + Math.random()*1.2) + "s";
       document.body.appendChild(h);
-      setTimeout(()=>h.remove(), 2400);
+      setTimeout(()=>h.remove(), 2200);
     }
   }
 </script>
