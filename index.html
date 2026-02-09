@@ -7,16 +7,59 @@
 
 <style>
   body{
-    margin:0;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    text-align:center;
-    background: linear-gradient(135deg,#ff9ecf,#ffe3f1);
-    overflow:hidden;
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family: system-ui, Arial;
+  text-align:center;
+  overflow:hidden;
+  background:black;
+}
+
+/* PHOTO BACKGROUND SLIDESHOW */
+body::before{
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  background-size:cover;
+  background-position:center;
+  z-index:-2;
+  animation:bgSlide 20s infinite;
+  filter: blur(20px) brightness(0.5);
+}
+
+@keyframes bgSlide{
+  0%{
+    background-image:url("image_2026-02-09_094758769.png");
   }
+  33%{
+    background-image:url("image_2026-02-09_095155389.png");
+  }
+  66%{
+    background-image:url("image_2026-02-09_095213093.png");
+  }
+  100%{
+    background-image:url("image_2026-02-09_094758769.png");
+  }
+}
+
+/* pink overlay glow */
+body::after{
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  background:linear-gradient(135deg,#ff9ecf88,#ffc0e688);
+  z-index:-1;
+}
+
 
   .card{
     width:min(560px, 92vw);
