@@ -51,7 +51,7 @@
     border-radius:22px;
     box-shadow:0 20px 60px rgba(0,0,0,.18);
     position:relative;
-    z-index: 5; /* above side photos */
+    z-index: 5;
   }
 
   h1{ margin:0 0 16px; font-size: clamp(26px, 4vw, 38px); }
@@ -105,17 +105,17 @@
     place-items:center;
     padding: 18px 0 4px;
     position: relative;
-    z-index: 20; /* ✅ keeps envelope/letter above the title area */
+    z-index: 20;
   }
 
-  /* shift envelope left a bit */
   .envelope{
     width:260px;
     height:170px;
     position:relative;
     margin: 10px auto 0;
-    overflow:hidden;               /* makes letter look inside */
-    transform: translateX(-18px);  /* move left */
+    overflow:hidden;
+    transform: translateX(-18px);
+    perspective: 900px;
   }
 
   .env-back{
@@ -126,33 +126,77 @@
     z-index:1;
   }
 
-  /* Letter BEHIND pocket (but above the card header area) */
+  /* LETTER (starts inside envelope, behind pocket) */
   .letter{
     position:absolute;
     background:white;
     width:85%;
     left:7.5%;
-    bottom:10px;
-    height:135px;
+    bottom:0;
+    height:140px;
     border-radius:10px;
     padding:15px;
     box-shadow:0 8px 20px rgba(0,0,0,.15);
-    transform: translateY(88px); /* start hidden */
+    transform: translateY(105px);
     transition: transform 0.75s cubic-bezier(.2,.9,.2,1);
-    z-index:6; /* ✅ higher so it doesn't go under the top section */
+    z-index:6;
+    overflow:hidden;
   }
 
-  /* Pocket/front OVER letter */
+  /* ✅ REFERENCE-STYLE POCKET (3-piece) */
   .env-pocket{
     position:absolute;
     inset:0;
-    background:linear-gradient(135deg,#ff9ed1,#ff6fb8);
-    clip-path: polygon(0 0, 50% 60%, 100% 0, 100% 100%, 0 100%);
-    border-radius:14px;
-    z-index:7; /* ✅ above letter */
+    z-index:7;
+    pointer-events:none;
   }
 
-  /* Flap top layer */
+  .pocket-bottom{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:62%;
+    background:linear-gradient(135deg,#ff9ed1,#ff6fb8);
+    border-bottom-left-radius:14px;
+    border-bottom-right-radius:14px;
+  }
+
+  .pocket-left{
+    position:absolute;
+    left:0;
+    bottom:0;
+    width:50%;
+    height:62%;
+    background:linear-gradient(135deg,#ff87c7,#ff5fb3);
+    clip-path: polygon(0 0, 100% 55%, 0 100%);
+    border-bottom-left-radius:14px;
+    opacity:0.95;
+  }
+
+  .pocket-right{
+    position:absolute;
+    right:0;
+    bottom:0;
+    width:50%;
+    height:62%;
+    background:linear-gradient(225deg,#ff87c7,#ff5fb3);
+    clip-path: polygon(0 55%, 100% 0, 100% 100%);
+    border-bottom-right-radius:14px;
+    opacity:0.95;
+  }
+
+  .pocket-lip{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    height:14px;
+    background:rgba(255,255,255,0.18);
+    border-bottom-left-radius:14px;
+    border-bottom-right-radius:14px;
+  }
+
   .flap{
     position:absolute;
     top:-1px;
@@ -164,17 +208,13 @@
     border-top:90px solid #ff4da6;
     transform-origin: top center;
     transition: transform 0.6s cubic-bezier(.2,.9,.2,1);
-    z-index:8; /* ✅ above everything */
+    z-index:8;
   }
 
-  .open .letter{
-    transform: translateY(-35px); /* slides out */
-  }
-  .open .flap{
-    transform: rotateX(180deg);
-  }
+  .open .letter{ transform: translateY(-35px); }
+  .open .flap{ transform: rotateX(180deg); }
 
-  /* floating hearts */
+  /* hearts */
   .heart{
     position:fixed;
     top:-30px;
@@ -193,11 +233,13 @@
 </head>
 
 <body>
-  <!-- SIDE PHOTOS -->
   <div id="float-bg" aria-hidden="true"></div>
 
+  <!-- MUSIC: upload K.mp3 next to index.html -->
+  <audio id="song" src="K.mp3" preload="auto"></audio>
+
   <main class="card">
-    <h1 id="title">Will you be my Valentine? 💘</h1>
+    <h1 id="title">Jay, will you be my Valentine? 💘</h1>
     <p id="subtitle">I promise snacks, good vibes, and a cute date.</p>
 
     <div class="btns" id="buttons">
@@ -205,11 +247,11 @@
       <button id="no">No 🙃</button>
     </div>
 
-    <!-- Envelope + Letter -->
     <div class="scene" id="scene">
       <div class="envelope-wrap">
         <div class="envelope" id="envelope">
           <div class="env-back"></div>
+
           <div class="letter" id="letter">
             <h2 style="margin:0 0 8px; color:#ff2e8a; font-size:16px;">My Love,</h2>
             <p id="letterText" style="margin:0; font-size:14px; line-height:1.35; opacity:.9;">
@@ -218,7 +260,15 @@
             </p>
             <div id="signature" style="margin-top:10px; font-weight:700; color:#ff2e8a;">— Yours 💘</div>
           </div>
-          <div class="env-pocket"></div>
+
+          <!-- ✅ pocket pieces -->
+          <div class="env-pocket">
+            <div class="pocket-bottom"></div>
+            <div class="pocket-left"></div>
+            <div class="pocket-right"></div>
+            <div class="pocket-lip"></div>
+          </div>
+
           <div class="flap"></div>
         </div>
       </div>
@@ -227,7 +277,7 @@
   </main>
 
 <script>
-  // SIDE PHOTOS (ONLY LEFT/RIGHT)
+  // SIDE PHOTOS (ONLY LEFT/RIGHT) + LESS OVERLAP
   const floatBg = document.getElementById("float-bg");
   const images = [
     "image_2026-02-09_120920292.png",
@@ -248,31 +298,61 @@
     "image_2026-02-09_121558715.png"
   ];
 
-  const COUNT_PER_SIDE = 7; // ✅ more images
-
+  const COUNT_PER_SIDE = 7;
   function rand(min, max){ return Math.random() * (max - min) + min; }
 
   function spawnSidePhotos(){
     floatBg.innerHTML = "";
+
+    const placed = [];
+    const minDist = 200;
+    const triesPerImg = 50;
+
+    function farEnough(px, py){
+      for (const p of placed){
+        if (Math.hypot(px - p.x, py - p.y) < minDist) return false;
+      }
+      return true;
+    }
 
     const make = (side) => {
       const img = document.createElement("img");
       img.src = images[Math.floor(Math.random() * images.length)];
       img.className = "float-photo";
 
-      // ✅ spread wider on sides
-      const x = side === "left" ? rand(2, 28) : rand(72, 98);
-      // ✅ spread vertically more
-      const y = rand(5, 95);
+      const xMin = side === "left" ? 2 : 72;
+      const xMax = side === "left" ? 28 : 98;
+
+      // bigger photos
+      img.style.width = rand(170, 260) + "px";
+
+      let x, y, ok = false;
+      for (let t=0; t<triesPerImg; t++){
+        x = rand(xMin, xMax);
+        y = rand(5, 95);
+
+        const px = (x/100) * window.innerWidth;
+        const py = (y/100) * window.innerHeight;
+
+        if (farEnough(px, py)){
+          placed.push({x:px, y:py});
+          ok = true;
+          break;
+        }
+      }
+
+      if (!ok){
+        x = rand(xMin, xMax);
+        y = rand(5, 95);
+        placed.push({x:(x/100)*window.innerWidth, y:(y/100)*window.innerHeight});
+      }
 
       img.style.left = x + "vw";
       img.style.top  = y + "vh";
 
-      // ✅ bigger images
-      img.style.width = rand(170, 260) + "px";
-
       img.style.animationDuration = rand(9, 16) + "s";
       img.style.animationDelay = rand(-8, 0) + "s";
+
       return img;
     };
 
@@ -292,8 +372,14 @@
   const title = document.getElementById("title");
   const subtitle = document.getElementById("subtitle");
 
+  // MUSIC
+  const song = document.getElementById("song");
+
   let yesSize = 1;
   let noSize = 1;
+
+  // continuous heart rain handle
+  let heartRain = null;
 
   document.addEventListener("mousemove", (e)=>{
     const rect = no.getBoundingClientRect();
@@ -339,6 +425,17 @@
     subtitle.textContent = "Open your letter…";
     scene.classList.add("show");
 
+    // play music after YES
+    if (song){
+      song.volume = 0.7;
+      song.play().catch(()=>{});
+    }
+
+    // start continuous falling hearts AFTER YES (only once)
+    if (!heartRain){
+      heartRain = setInterval(() => popHearts(2), 300);
+    }
+
     setTimeout(() => {
       envelope.classList.add("open");
       popHearts(28);
@@ -359,7 +456,7 @@
       h.style.fontSize = (18 + Math.random()*22) + "px";
       h.style.animationDuration = (1.2 + Math.random()*1.2) + "s";
       document.body.appendChild(h);
-      setTimeout(()=>h.remove(), 2200);
+      setTimeout(()=>h.remove(), 2400);
     }
   }
 </script>
