@@ -690,12 +690,27 @@ I’m so lucky to have you, and I’d choose you every time.`;
     scene.classList.add("show");
 
     // music
-    if (song){
-      song.volume = 0.7;
-      // your start point
-      song.currentTime = 41;
-      song.play().catch(()=>{});
-    }
+// music (fade in)
+if (song){
+  const TARGET_VOL = 0.7;   // final volume
+  const FADE_MS = 1800;     // fade duration
+
+  song.currentTime = 41;
+  song.volume = 0;
+  song.play().catch(()=>{});
+
+  // smooth fade
+  const steps = 30;
+  let step = 0;
+  const tick = FADE_MS / steps;
+
+  const fadeTimer = setInterval(() => {
+    step++;
+    song.volume = Math.min(TARGET_VOL, (TARGET_VOL * step) / steps);
+    if (step >= steps) clearInterval(fadeTimer);
+  }, tick);
+}
+
 
     startHeartRain();
 
